@@ -22,12 +22,13 @@ class EntryListTableViewController: UITableViewController {
     var sessionId = String()
     var entries : [initialEntry]?
     let footerHeight = CGFloat(15)
-    let cellHeight = CGFloat(120)
+    let headerHeight = CGFloat(5)
+    let cellHeight = CGFloat(200)
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let Id = (EntryListTableViewController.defaults.object(forKey: EntryListTableViewController.key) as? String) {
+     /*   if let Id = (EntryListTableViewController.defaults.object(forKey: EntryListTableViewController.key) as? String) {
             sessionId = Id
             
         } else {
@@ -35,24 +36,25 @@ class EntryListTableViewController: UITableViewController {
                 self.sessionId = id!
                 EntryListTableViewController.defaults.set(id!, forKey: EntryListTableViewController.key)
             }
-        }
-     
+        }*/
+        sessionIdCheck()
         
-   selectData()
+  // selectData()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+         selectData()
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return entries?[0].data[0].count ?? 0//entries?.count ?? 0
+        return entries?[0].data[0].count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return entries![0].data[0][section].da != entries![0].data[0][section].dm ? 2 : 1
-        //steps![section].sumOfSteps > goal ? 2 : 1
     }
 
     
@@ -61,14 +63,14 @@ class EntryListTableViewController: UITableViewController {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath)
             if let mainCell = cell as? MainTableViewCell {
-                mainCell.bodyLabel.text = entries![0].data[0][indexPath.section].body
+                mainCell.bodyLabel.text = String(entries![0].data[0][indexPath.section].body.truncated())
                 mainCell.createdLabel.text = convertDate(for: entries![0].data[0][indexPath.section].da)
             }
              return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "FooterTableViewCell", for: indexPath)
             if let footerCell = cell as? FooterTableViewCell {
-               footerCell.changedLabel.text = convertDate(for: entries![0].data[0][indexPath.section].dm)
+                footerCell.changedLabel.text = "changed: \(convertDate(for: entries![0].data[0][indexPath.section].dm))"
             }
               return cell
         }
@@ -79,55 +81,31 @@ class EntryListTableViewController: UITableViewController {
         return entries![0].data[0][indexPath.section].da != entries![0].data[0][indexPath.section].dm ? ( indexPath.row == 0 ? cellHeight : footerHeight ) : cellHeight
     }
     
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return headerHeight
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
+ 
 
     
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddNewEntry" {
-            print ("\(segue.destination)")
             if let addNewEntryVC = segue.destination as? AddEntryViewController {
                     addNewEntryVC.baseURL = baseURL
                addNewEntryVC.sessionId = sessionId
                 addNewEntryVC.token = token
             }
+        } else
+            if segue.identifier == "ShowEntry" {
+                if let indexPath = tableView.indexPathForSelectedRow, let showEntryVC = segue.destination as? ShowEntryViewController {
+                    showEntryVC.textBody = entries![0].data[0][indexPath.section].body
+                }
         }
+        
     }
+    
+    //MARK: work with API
     
     func createSession(completion: @escaping (_ id: String?) -> Void) {
         
@@ -142,6 +120,18 @@ class EntryListTableViewController: UITableViewController {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             
+            if error != nil {
+                print(error)
+                self.connectionCheck()
+            }
+            if let httpResponse = response  as? HTTPURLResponse {
+                if httpResponse.statusCode  == 200 {
+                    print ("httpResponse = \(httpResponse)")
+                }
+              
+            }
+            
+            
             guard let data = data else {
                 print("empty data")
                 return
@@ -151,10 +141,20 @@ class EntryListTableViewController: UITableViewController {
                 let json = try JSONDecoder().decode(initialSession.self, from: data)
                 completion(json.data.session)
             } catch let error as NSError {
-                print("error",error)
+                print("error point 2",error)
             }
             
             }.resume()
+    }
+    
+    func connectionCheck(){
+         let alert = UIAlertController (title: "соединение не выполнено", message: "проверьте соединение с сетью", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "обновить данные", style: .default, handler: { (action: UIAlertAction ) -> Void in
+            DispatchQueue.main.async {
+                self.sessionIdCheck()
+            }
+            }))
+        present(alert, animated: true, completion: nil)
     }
     
     func selectData(){
@@ -191,13 +191,25 @@ class EntryListTableViewController: UITableViewController {
             }.resume()
     }
     
+    
+    func sessionIdCheck(){
+        if let Id = (EntryListTableViewController.defaults.object(forKey: EntryListTableViewController.key) as? String) {
+            self.sessionId = Id
+            
+        } else {
+            createSession { (id) in
+                self.sessionId = id!
+                EntryListTableViewController.defaults.set(id!, forKey: EntryListTableViewController.key)
+            }
+        }
+    }
+    
     func convertDate(for unixtimeInterval: String) -> String {
-       // var tempDate = String(unixtimeInterval)
         let date = Date(timeIntervalSince1970: Double(unixtimeInterval)!)
         let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = NSTimeZone(name: "GMT") as! TimeZone//Set timezone that you want
+        dateFormatter.timeZone = NSTimeZone(name: "GMT") as TimeZone?
         dateFormatter.locale = NSLocale.current
-        dateFormatter.dateFormat = "dd.MM.yyyy" //Specify your format that you want
+        dateFormatter.dateFormat = "dd.MM.yyyy"
         let strDate = dateFormatter.string(from: date)
         return strDate
     }

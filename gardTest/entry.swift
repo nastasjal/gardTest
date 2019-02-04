@@ -13,8 +13,6 @@ struct initialEntry : Codable {
     var data: [[ entry ]]
 }
 
-//var entryArrray = [entry]()
-
 
 struct entry: Codable {
     var id : String
@@ -23,7 +21,5 @@ struct entry: Codable {
     var dm: String
 }
 
-
-/*{"status":1,"data":[[{"id":"y6nhseVYsd","body":"test text body","da":"1549224591","dm":"1549224591"}]]}*/
 
 

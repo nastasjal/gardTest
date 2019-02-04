@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4D835590220639B500984EB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D83558F220639B500984EB5 /* AppDelegate.swift */; };
-		4D835592220639B500984EB5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D835591220639B500984EB5 /* ViewController.swift */; };
 		4D835595220639B500984EB5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D835593220639B500984EB5 /* Main.storyboard */; };
 		4D835597220639BA00984EB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D835596220639BA00984EB5 /* Assets.xcassets */; };
 		4D83559A220639BA00984EB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D835598220639BA00984EB5 /* LaunchScreen.storyboard */; };
@@ -18,12 +17,12 @@
 		4D8355A922078E2E00984EB5 /* entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8355A822078E2E00984EB5 /* entry.swift */; };
 		4D8355AB2207920F00984EB5 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8355AA2207920F00984EB5 /* MainTableViewCell.swift */; };
 		4D8355AD2207922200984EB5 /* FooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8355AC2207922200984EB5 /* FooterTableViewCell.swift */; };
+		4D8355AF2208490D00984EB5 /* ShowEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8355AE2208490D00984EB5 /* ShowEntryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4D83558C220639B500984EB5 /* gardTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gardTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D83558F220639B500984EB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4D835591220639B500984EB5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		4D835594220639B500984EB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4D835596220639BA00984EB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4D835599220639BA00984EB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -34,6 +33,7 @@
 		4D8355A822078E2E00984EB5 /* entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = entry.swift; sourceTree = "<group>"; };
 		4D8355AA2207920F00984EB5 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		4D8355AC2207922200984EB5 /* FooterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterTableViewCell.swift; sourceTree = "<group>"; };
+		4D8355AE2208490D00984EB5 /* ShowEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowEntryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,9 +67,9 @@
 			isa = PBXGroup;
 			children = (
 				4D83558F220639B500984EB5 /* AppDelegate.swift */,
-				4D835591220639B500984EB5 /* ViewController.swift */,
 				4D8355A22207464C00984EB5 /* session.swift */,
 				4D835593220639B500984EB5 /* Main.storyboard */,
+				4D8355AE2208490D00984EB5 /* ShowEntryViewController.swift */,
 				4D8355AA2207920F00984EB5 /* MainTableViewCell.swift */,
 				4D8355AC2207922200984EB5 /* FooterTableViewCell.swift */,
 				4D8355A62207870F00984EB5 /* EntryListTableViewController.swift */,
@@ -162,8 +162,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D8355A922078E2E00984EB5 /* entry.swift in Sources */,
-				4D835592220639B500984EB5 /* ViewController.swift in Sources */,
 				4D8355A72207870F00984EB5 /* EntryListTableViewController.swift in Sources */,
+				4D8355AF2208490D00984EB5 /* ShowEntryViewController.swift in Sources */,
 				4D8355AB2207920F00984EB5 /* MainTableViewCell.swift in Sources */,
 				4D8355A5220783C100984EB5 /* AddEntryViewController.swift in Sources */,
 				4D8355A32207464C00984EB5 /* session.swift in Sources */,

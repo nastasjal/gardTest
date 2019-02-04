@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddEntryViewController: UIViewController {
+class AddEntryViewController: UIViewController, UITextViewDelegate {
 
 var token = String()
 var baseURL = String()
@@ -16,25 +16,36 @@ var sessionId = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+ bodyText.delegate = self
     }
     
-    @IBOutlet weak var body: UITextField!
+    @IBOutlet weak var bodyText: UITextView!
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if (text == "\n") {
+            bodyText.resignFirstResponder()
+            return false
+        }
+        return true
+    }
     
-
+    
+    
     @IBAction func closeButton(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+        
     }
+    
     
     @IBAction func saveButton(_ sender: UIButton) {
         
-        insertEntry(text: body.text!, for: sessionId)
+        insertEntry(text: bodyText.text!, for: sessionId)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func insertEntry(text body: String, for sessionId: String){
         guard   let url = URL(string: self.baseURL) else { return }
         
         let parameters = "a=add_entry&session=\(sessionId)&body=\(body)"
-        print ("parameters = \(parameters)")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("\(token)", forHTTPHeaderField: "token")
@@ -49,8 +60,8 @@ var sessionId = String()
             guard let data = data else { return }
             
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                print("json = \(json)")
+                _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+               // print("json = \(json)")
             } catch {
                 print("error")
             }
