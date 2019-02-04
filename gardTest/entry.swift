@@ -10,24 +10,20 @@ import Foundation
 
 struct initialEntry : Codable {
     var status: Int
-    var data: [ entry]
+    var data: [[ entry ]]
 }
 
-/*
-enum Data: String, Codable {
-case id
-case body
-case da
-case dm
-}*/
+//var entryArrray = [entry]()
 
 
 struct entry: Codable {
     var id : String
     var body: String
-    var da: Double
-    var dm: Double
+    var da: String
+    var dm: String
 }
 
 
 /*{"status":1,"data":[[{"id":"y6nhseVYsd","body":"test text body","da":"1549224591","dm":"1549224591"}]]}*/
+
+

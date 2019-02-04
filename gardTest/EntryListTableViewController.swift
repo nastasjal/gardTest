@@ -21,6 +21,8 @@ class EntryListTableViewController: UITableViewController {
     let token    = "Oqu6izM-l1-zHsoNk0"
     var sessionId = String()
     var entries : [initialEntry]?
+    let footerHeight = CGFloat(15)
+    let cellHeight = CGFloat(120)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,36 +46,39 @@ class EntryListTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0//entries?.count ?? 0
+        return entries?[0].data[0].count ?? 0//entries?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0//entries![section].data.da != entries![section].data.dm ? 2 : 1
+        return entries![0].data[0][section].da != entries![0].data[0][section].dm ? 2 : 1
         //steps![section].sumOfSteps > goal ? 2 : 1
     }
 
     
- /*   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath)
             if let mainCell = cell as? MainTableViewCell {
-                mainCell.bodyLabel.text = entries![indexPath.section].data.body
-                mainCell.createdLabel.text = convertDate(for: entries![indexPath.section].data.da)
+                mainCell.bodyLabel.text = entries![0].data[0][indexPath.section].body
+                mainCell.createdLabel.text = convertDate(for: entries![0].data[0][indexPath.section].da)
             }
              return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "FooterTableViewCell", for: indexPath)
             if let footerCell = cell as? FooterTableViewCell {
-               footerCell.changedLabel.text = convertDate(for: entries![indexPath.section].data.dm)
+               footerCell.changedLabel.text = convertDate(for: entries![0].data[0][indexPath.section].dm)
             }
               return cell
         }
       
     }
-    */
-
+ 
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return entries![0].data[0][indexPath.section].da != entries![0].data[0][indexPath.section].dm ? ( indexPath.row == 0 ? cellHeight : footerHeight ) : cellHeight
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -170,10 +175,10 @@ class EntryListTableViewController: UITableViewController {
             guard let data = data else { return }
             
             do {
-                let entryData = try JSONDecoder().decode([initialEntry].self, from: data)
+                let entryData = try JSONDecoder().decode(initialEntry.self, from: data)
                 
                 DispatchQueue.main.async {
-                    self.entries = entryData
+                    self.entries = [entryData]
                     self.tableView.reloadData()
                      print("json = \(entryData)")
                 }
@@ -186,9 +191,9 @@ class EntryListTableViewController: UITableViewController {
             }.resume()
     }
     
-    func convertDate(for unixtimeInterval: Double) -> String {
-        var tempDate = String(unixtimeInterval)
-        let date = Date(timeIntervalSince1970: Double(tempDate)!)
+    func convertDate(for unixtimeInterval: String) -> String {
+       // var tempDate = String(unixtimeInterval)
+        let date = Date(timeIntervalSince1970: Double(unixtimeInterval)!)
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = NSTimeZone(name: "GMT") as! TimeZone//Set timezone that you want
         dateFormatter.locale = NSLocale.current
