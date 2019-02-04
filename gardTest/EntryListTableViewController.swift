@@ -106,8 +106,7 @@ class EntryListTableViewController: UITableViewController {
         URLSession.shared.dataTask(with: request) { data, response, error in
             
             if error != nil {
-                print(error)
-                self.connectionCheck()
+               // self.connectionCheck()
             }
             if let httpResponse = response  as? HTTPURLResponse {
                 if httpResponse.statusCode  == 200 {
@@ -126,7 +125,7 @@ class EntryListTableViewController: UITableViewController {
                 let json = try JSONDecoder().decode(initialSession.self, from: data)
                 completion(json.data.session)
             } catch let error as NSError {
-                print("error point 2",error)
+                print("parsing error",error)
             }
             
             }.resume()
@@ -165,10 +164,7 @@ class EntryListTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     self.entries = [entryData]
                     self.tableView.reloadData()
-                    print("json = \(entryData)")
                 }
-                
-                print("json = \(entryData)")
             } catch {
                 print("error = \(error)")
             }
