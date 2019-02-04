@@ -9,16 +9,16 @@
 import UIKit
 
 class ShowEntryViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         showEntry.text = textBody
-
+        
     }
     
     var textBody = String()
-
+    
     @IBOutlet weak var showEntry: UITextView!
     
-
+    
 }

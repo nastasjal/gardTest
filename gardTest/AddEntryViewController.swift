@@ -9,14 +9,14 @@
 import UIKit
 
 class AddEntryViewController: UIViewController, UITextViewDelegate {
-
-var token = String()
-var baseURL = String()
-var sessionId = String()
+    
+    var token = String()
+    var baseURL = String()
+    var sessionId = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
- bodyText.delegate = self
+        bodyText.delegate = self
     }
     
     @IBOutlet weak var bodyText: UITextView!
@@ -61,7 +61,7 @@ var sessionId = String()
             
             do {
                 _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-               // print("json = \(json)")
+                // print("json = \(json)")
             } catch {
                 print("error")
             }

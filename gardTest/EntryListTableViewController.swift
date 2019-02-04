@@ -9,13 +9,9 @@
 import UIKit
 
 class EntryListTableViewController: UITableViewController {
-
+    
     private static let defaults = UserDefaults.standard
     private static let key = "session"
-    
-  /*  static var searches: Int {
-        return (defaults.object(forKey: key) as? Int) ?? self.goalDefault
-    }*/
     
     let baseURL = "https://bnet.i-partner.ru/testAPI/"
     let token    = "Oqu6izM-l1-zHsoNk0"
@@ -27,36 +23,25 @@ class EntryListTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-     /*   if let Id = (EntryListTableViewController.defaults.object(forKey: EntryListTableViewController.key) as? String) {
-            sessionId = Id
-            
-        } else {
-            createSession { (id) in
-                self.sessionId = id!
-                EntryListTableViewController.defaults.set(id!, forKey: EntryListTableViewController.key)
-            }
-        }*/
-        sessionIdCheck()
         
-  // selectData()
+        sessionIdCheck()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-         selectData()
+        selectData()
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return entries?[0].data[0].count ?? 0
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return entries![0].data[0][section].da != entries![0].data[0][section].dm ? 2 : 1
     }
-
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
@@ -66,17 +51,17 @@ class EntryListTableViewController: UITableViewController {
                 mainCell.bodyLabel.text = String(entries![0].data[0][indexPath.section].body.truncated())
                 mainCell.createdLabel.text = convertDate(for: entries![0].data[0][indexPath.section].da)
             }
-             return cell
+            return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "FooterTableViewCell", for: indexPath)
             if let footerCell = cell as? FooterTableViewCell {
                 footerCell.changedLabel.text = "changed: \(convertDate(for: entries![0].data[0][indexPath.section].dm))"
             }
-              return cell
+            return cell
         }
-      
+        
     }
- 
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return entries![0].data[0][indexPath.section].da != entries![0].data[0][indexPath.section].dm ? ( indexPath.row == 0 ? cellHeight : footerHeight ) : cellHeight
     }
@@ -84,16 +69,16 @@ class EntryListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return headerHeight
     }
- 
-
+    
+    
     
     // MARK: - Navigation
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddNewEntry" {
             if let addNewEntryVC = segue.destination as? AddEntryViewController {
-                    addNewEntryVC.baseURL = baseURL
-               addNewEntryVC.sessionId = sessionId
+                addNewEntryVC.baseURL = baseURL
+                addNewEntryVC.sessionId = sessionId
                 addNewEntryVC.token = token
             }
         } else
@@ -128,7 +113,7 @@ class EntryListTableViewController: UITableViewController {
                 if httpResponse.statusCode  == 200 {
                     print ("httpResponse = \(httpResponse)")
                 }
-              
+                
             }
             
             
@@ -148,12 +133,12 @@ class EntryListTableViewController: UITableViewController {
     }
     
     func connectionCheck(){
-         let alert = UIAlertController (title: "соединение не выполнено", message: "проверьте соединение с сетью", preferredStyle: .alert)
+        let alert = UIAlertController (title: "соединение не выполнено", message: "проверьте соединение с сетью", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "обновить данные", style: .default, handler: { (action: UIAlertAction ) -> Void in
             DispatchQueue.main.async {
                 self.sessionIdCheck()
             }
-            }))
+        }))
         present(alert, animated: true, completion: nil)
     }
     
@@ -180,7 +165,7 @@ class EntryListTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     self.entries = [entryData]
                     self.tableView.reloadData()
-                     print("json = \(entryData)")
+                    print("json = \(entryData)")
                 }
                 
                 print("json = \(entryData)")
@@ -213,6 +198,6 @@ class EntryListTableViewController: UITableViewController {
         let strDate = dateFormatter.string(from: date)
         return strDate
     }
-
+    
 }
 
