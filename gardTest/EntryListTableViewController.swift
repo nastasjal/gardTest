@@ -13,23 +13,31 @@ class EntryListTableViewController: UITableViewController {
     private static let defaults = UserDefaults.standard
     private static let key = "session"
     
-    let baseURL = "https://bnet.i-partner.ru/testAPI/"
-    let token    = "Oqu6izM-l1-zHsoNk0"
-    var sessionId = String()
-    var entries : [initialEntry]?
+
+    var requestEntry = request()
+    var entries : [initialEntry]? {
+        didSet{
+             DispatchQueue.main.async {
+            self.tableView.reloadData()
+            }
+        }
+    }
     let footerHeight = CGFloat(15)
     let headerHeight = CGFloat(5)
     let cellHeight = CGFloat(200)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print ("view did load")
         sessionIdCheck()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        selectData()
+        requestEntry.selectData(completion: {(data) in
+            self.entries = data
+        })
+
     }
     
     // MARK: - Table view data source
@@ -50,6 +58,7 @@ class EntryListTableViewController: UITableViewController {
             if let mainCell = cell as? MainTableViewCell {
                 mainCell.bodyLabel.text = String(entries![0].data[0][indexPath.section].body.truncated())
                 mainCell.createdLabel.text = convertDate(for: entries![0].data[0][indexPath.section].da)
+                 print ("table view reload data")
             }
             return cell
         default:
@@ -77,9 +86,7 @@ class EntryListTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddNewEntry" {
             if let addNewEntryVC = segue.destination as? AddEntryViewController {
-                addNewEntryVC.baseURL = baseURL
-                addNewEntryVC.sessionId = sessionId
-                addNewEntryVC.token = token
+                addNewEntryVC.requestEntry = self.requestEntry
             }
         } else
             if segue.identifier == "ShowEntry" {
@@ -90,96 +97,14 @@ class EntryListTableViewController: UITableViewController {
         
     }
     
-    //MARK: work with API
-    
-    func createSession(completion: @escaping (_ id: String?) -> Void) {
-        
-        guard   let url = URL(string: self.baseURL) else { return }
-        
-        let parameters = "a=new_session"
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("\(token)", forHTTPHeaderField: "token")
-        request.httpBody = parameters.data(using: .utf8)
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            
-            if error != nil {
-               // self.connectionCheck()
-            }
-            if let httpResponse = response  as? HTTPURLResponse {
-                if httpResponse.statusCode  == 200 {
-                    print ("httpResponse = \(httpResponse)")
-                }
-                
-            }
-            
-            
-            guard let data = data else {
-                print("empty data")
-                return
-            }
-            
-            do {
-                let json = try JSONDecoder().decode(initialSession.self, from: data)
-                completion(json.data.session)
-            } catch let error as NSError {
-                print("parsing error",error)
-            }
-            
-            }.resume()
-    }
-    
-    func connectionCheck(){
-        let alert = UIAlertController (title: "соединение не выполнено", message: "проверьте соединение с сетью", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "обновить данные", style: .default, handler: { (action: UIAlertAction ) -> Void in
-            DispatchQueue.main.async {
-                self.sessionIdCheck()
-            }
-        }))
-        present(alert, animated: true, completion: nil)
-    }
-    
-    func selectData(){
-        guard   let url = URL(string: self.baseURL) else { return }
-        
-        let parameters = "a=get_entries&session=\(sessionId)"
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("\(token)", forHTTPHeaderField: "token")
-        request.httpBody = parameters.data(using: .utf8)
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            
-            if let response = response {
-                print("response = \(response)")
-            }
-            
-            guard let data = data else { return }
-            
-            do {
-                let entryData = try JSONDecoder().decode(initialEntry.self, from: data)
-                
-                DispatchQueue.main.async {
-                    self.entries = [entryData]
-                    self.tableView.reloadData()
-                }
-            } catch {
-                print("error = \(error)")
-            }
-            
-            }.resume()
-    }
-    
-    
     func sessionIdCheck(){
+        print ("sessionIdCheck")
         if let Id = (EntryListTableViewController.defaults.object(forKey: EntryListTableViewController.key) as? String) {
-            self.sessionId = Id
-            
+            requestEntry.sessionId = Id
+           print ("use defaults sessionId")
         } else {
-            createSession { (id) in
-                self.sessionId = id!
+            requestEntry.createSession { (id) in
+                self.requestEntry.sessionId = id!
                 EntryListTableViewController.defaults.set(id!, forKey: EntryListTableViewController.key)
             }
         }
