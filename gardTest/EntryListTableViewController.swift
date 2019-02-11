@@ -13,12 +13,12 @@ class EntryListTableViewController: UITableViewController {
     private static let defaults = UserDefaults.standard
     private static let key = "session"
     
-
+    
     var requestEntry = request()
     var entries : [initialEntry]? {
         didSet{
-             DispatchQueue.main.async {
-            self.tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
         }
     }
@@ -37,7 +37,7 @@ class EntryListTableViewController: UITableViewController {
         requestEntry.selectData(completion: {(data) in
             self.entries = data
         })
-
+        
     }
     
     // MARK: - Table view data source
@@ -58,7 +58,6 @@ class EntryListTableViewController: UITableViewController {
             if let mainCell = cell as? MainTableViewCell {
                 mainCell.bodyLabel.text = String(entries![0].data[0][indexPath.section].body.truncated())
                 mainCell.createdLabel.text = convertDate(for: entries![0].data[0][indexPath.section].da)
-                 print ("table view reload data")
             }
             return cell
         default:
@@ -101,7 +100,7 @@ class EntryListTableViewController: UITableViewController {
         print ("sessionIdCheck")
         if let Id = (EntryListTableViewController.defaults.object(forKey: EntryListTableViewController.key) as? String) {
             requestEntry.sessionId = Id
-           print ("use defaults sessionId")
+            print ("use defaults sessionId")
         } else {
             requestEntry.createSession { (id) in
                 self.requestEntry.sessionId = id!
