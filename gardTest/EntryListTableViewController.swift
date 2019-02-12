@@ -10,11 +10,9 @@ import UIKit
 
 class EntryListTableViewController: UITableViewController {
     
-    private static let defaults = UserDefaults.standard
-    private static let key = "session"
     
-    
-    var requestEntry = request()
+    var requestEntry = runRequest()
+ 
     var entries : [initialEntry]? {
         didSet{
             DispatchQueue.main.async {
@@ -29,11 +27,10 @@ class EntryListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print ("view did load")
-        sessionIdCheck()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         requestEntry.selectData(completion: {[weak self] (data) in
             self?.entries = data
         })
@@ -96,18 +93,6 @@ class EntryListTableViewController: UITableViewController {
         
     }
     
-    func sessionIdCheck(){
-        print ("sessionIdCheck")
-        if let Id = (EntryListTableViewController.defaults.object(forKey: EntryListTableViewController.key) as? String) {
-            requestEntry.sessionId = Id
-            print ("use defaults sessionId")
-        } else {
-            requestEntry.createSession {[weak self] (id) in
-                self?.requestEntry.sessionId = id!
-                EntryListTableViewController.defaults.set(id!, forKey: EntryListTableViewController.key)
-            }
-        }
-    }
     
     func convertDate(for unixtimeInterval: String) -> String {
         let date = Date(timeIntervalSince1970: Double(unixtimeInterval)!)

@@ -8,114 +8,78 @@
 
 import Foundation
 
-struct request {
-    let baseURL = "https://bnet.i-partner.ru/testAPI/"
-    let token    = "Oqu6izM-l1-zHsoNk0"
-    var sessionId = String()
+struct runRequest {
     
+    private static let defaults = UserDefaults.standard
+    private static let key = "session"
     
-    
-    func createSession(completion: @escaping (_ id: String?) -> Void) {
-        
-        guard   let url = URL(string: self.baseURL) else { return }
-        
-        let parameters = "a=new_session"
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("\(token)", forHTTPHeaderField: "token")
-        request.httpBody = parameters.data(using: .utf8)
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            
-            if error != nil {
-                // self.connectionCheck()
-            }
-            if let httpResponse = response  as? HTTPURLResponse {
-                if httpResponse.statusCode  == 200 {
-                    print ("httpResponse = \(httpResponse)")
-                }
+    var sessionId : String {
+        get {
+           if let id = (runRequest.defaults.object(forKey: runRequest.key) as? String) {
+                return id
                 
             }
-            
-            
-            guard let data = data else {
-                print("empty data")
-                return
-            }
-            
+            return ""
+        }
+    }
+    
+    func getSessionId(completion:  @escaping (_ id: String) -> Void) {
+        let parameters = [ "a":"new_session"]
+        let testRequest = requestAPI(parameters)
+        testRequest.generateRequest { (error , data) in
             do {
-                let json = try JSONDecoder().decode(initialSession.self, from: data)
-                completion(json.data.session)
+                let sessionId = try JSONDecoder().decode(initialSession.self, from: data!)
+                completion(sessionId.data.session)
             } catch let error as NSError {
                 print("parsing error",error)
             }
             
-            }.resume()
+        }
     }
     
-    func selectData(completion:  @escaping (_ dataEntries: [initialEntry]?) -> Void){
-        guard   let url = URL(string: self.baseURL) else { return }
-        let parameters = "a=get_entries&session=\(sessionId)"
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("\(token)", forHTTPHeaderField: "token")
-        request.httpBody = parameters.data(using: .utf8)
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let response = response {
-                print("response = \(response)")
-            }
-            
-            guard let data = data else { return }
-            
+func selectData( completion:  @escaping (_ dataEntries: [initialEntry]?) -> Void) {
+        let parameters = [ "a":"get_entries", "session":sessionId]
+        let testRequest = requestAPI(parameters)
+    
+    if sessionId != "" {
+        testRequest.generateRequest { (error , data) in
             do {
-                let json = try JSONDecoder().decode(initialEntry.self, from: data)
-                completion([json])
-            } catch {
-                print("error = \(error)")
+                let entry = try JSONDecoder().decode(initialEntry.self, from: data!)
+                completion([entry])
+            } catch let error as NSError {
+                print("parsing error",error)
             }
             
-            }.resume()
+        }
+    }
     }
     
-    func insertEntry(text body: String, for sessionId: String, completion: @escaping (_ sucess: Bool) -> Void){
-        guard   let url = URL(string: self.baseURL) else { return }
+    
+    
+    func insertData(text: String, completion:  @escaping (_ sucess: Bool) -> Void){
+        let parameters = [ "body":text, "a":"add_entry", "session":sessionId]
+        let testRequest = requestAPI(parameters)
         
-        let parameters = "a=add_entry&session=\(self.sessionId)&body=\(body)"
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("\(self.token)", forHTTPHeaderField: "token")
-        request.httpBody = parameters.data(using: .utf8)
+        testRequest.generateRequest { (error , data) in
+            completion(true)
+        }
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            
-            if let response = response {
-                print("response = \(response)")
-            }
-            
-            guard let data = data else { return }
-            
-            do {
-                _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                completion(true)
-            } catch {
-                print("error")
-            }
-            
-            }.resume()
     }
     
-    /*   func connectionCheck(){
-     let alert = UIAlertController (title: "соединение не выполнено", message: "проверьте соединение с сетью", preferredStyle: .alert)
-     alert.addAction(UIAlertAction(title: "обновить данные", style: .default, handler: { (action: UIAlertAction ) -> Void in
-     DispatchQueue.main.async {
-     self.sessionIdCheck()
-     }
-     }))
-     present(alert, animated: true, completion: nil)
-     }
-     */
+
+    init() {
+        if (runRequest.defaults.object(forKey: runRequest.key) as? String) == nil {
+            self.getSessionId { (id) in
+                DispatchQueue.main.async {
+                    print ("main get session")
+                    runRequest.defaults.set(id, forKey: runRequest.key)
+                }
+            }
+        }
+    }
     
     
 }
+
+
+

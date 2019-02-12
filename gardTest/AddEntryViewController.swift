@@ -11,8 +11,8 @@ import UIKit
 class AddEntryViewController: UIViewController, UITextViewDelegate {
     
     
-    var requestEntry = request()
-    
+   // var requestEntry = request()
+   var requestEntry =  runRequest()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +38,14 @@ class AddEntryViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func saveButton(_ sender: UIButton) {
         
-        requestEntry.insertEntry(text: bodyText.text!, for: requestEntry.sessionId) { (sucess) in
+        requestEntry.insertData(text: bodyText.text!) { (sucess) in
             DispatchQueue.main.async {
-                self.navigationController?.popViewController(animated: true)
+                if sucess {
+                    self.navigationController?.popViewController(animated: true)}
             }
+            
         }
+  
     }
     
 }

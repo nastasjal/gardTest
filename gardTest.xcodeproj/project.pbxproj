@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4D7C7A062211642900F9E705 /* request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7C7A052211642900F9E705 /* request.swift */; };
+		4D7C7A0A2212BF1400F9E705 /* requestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7C7A092212BF1400F9E705 /* requestAPI.swift */; };
 		4D835590220639B500984EB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D83558F220639B500984EB5 /* AppDelegate.swift */; };
 		4D835595220639B500984EB5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D835593220639B500984EB5 /* Main.storyboard */; };
 		4D835597220639BA00984EB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D835596220639BA00984EB5 /* Assets.xcassets */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		4D7C7A052211642900F9E705 /* request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = request.swift; sourceTree = "<group>"; };
+		4D7C7A092212BF1400F9E705 /* requestAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = requestAPI.swift; sourceTree = "<group>"; };
 		4D83558C220639B500984EB5 /* gardTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gardTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D83558F220639B500984EB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D835594220639B500984EB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				4D8355AA2207920F00984EB5 /* MainTableViewCell.swift */,
 				4D8355AC2207922200984EB5 /* FooterTableViewCell.swift */,
 				4D7C7A052211642900F9E705 /* request.swift */,
+				4D7C7A092212BF1400F9E705 /* requestAPI.swift */,
 				4D8355A62207870F00984EB5 /* EntryListTableViewController.swift */,
 				4D8355A822078E2E00984EB5 /* entry.swift */,
 				4D8355A4220783C100984EB5 /* AddEntryViewController.swift */,
@@ -172,6 +175,7 @@
 				4D8355A5220783C100984EB5 /* AddEntryViewController.swift in Sources */,
 				4D8355A32207464C00984EB5 /* session.swift in Sources */,
 				4D8355AD2207922200984EB5 /* FooterTableViewCell.swift in Sources */,
+				4D7C7A0A2212BF1400F9E705 /* requestAPI.swift in Sources */,
 				4D835590220639B500984EB5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
