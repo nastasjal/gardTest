@@ -9,7 +9,7 @@
 import UIKit
 
 class AddEntryViewController: UIViewController, UITextViewDelegate {
-
+    
     
     var requestEntry = request()
     

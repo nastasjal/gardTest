@@ -34,8 +34,8 @@ class EntryListTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        requestEntry.selectData(completion: {(data) in
-            self.entries = data
+        requestEntry.selectData(completion: {[weak self] (data) in
+            self?.entries = data
         })
         
     }
@@ -102,8 +102,8 @@ class EntryListTableViewController: UITableViewController {
             requestEntry.sessionId = Id
             print ("use defaults sessionId")
         } else {
-            requestEntry.createSession { (id) in
-                self.requestEntry.sessionId = id!
+            requestEntry.createSession {[weak self] (id) in
+                self?.requestEntry.sessionId = id!
                 EntryListTableViewController.defaults.set(id!, forKey: EntryListTableViewController.key)
             }
         }

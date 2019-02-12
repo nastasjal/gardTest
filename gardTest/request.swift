@@ -96,9 +96,9 @@ struct request {
             
             guard let data = data else { return }
             
-           do {
+            do {
                 _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            completion(true)
+                completion(true)
             } catch {
                 print("error")
             }
